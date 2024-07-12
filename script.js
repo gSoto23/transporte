@@ -66,105 +66,108 @@ document.addEventListener('DOMContentLoaded', function () {
     // Actualizar campos al seleccionar una dirección del autocompletar
     autocompleteOrigen.addListener('place_changed', function () {
         let place = autocompleteOrigen.getPlace();
-        if (!place.geometry) {
-            return;
+        if (place.geometry) {
+            markerOrigen.setPosition(place.geometry.location);
+            mapOrigen.setCenter(place.geometry.location);
+            calcularDistanciaYPrecio(precioPorKm);
         }
-        mapOrigen.setCenter(place.geometry.location);
-        markerOrigen.setPosition(place.geometry.location);
-        calcularDistanciaYPrecio(precioPorKm);
     });
 
     autocompleteDestino.addListener('place_changed', function () {
         let place = autocompleteDestino.getPlace();
-        if (!place.geometry) {
+        if (place.geometry) {
+            markerDestino.setPosition(place.geometry.location);
+            mapDestino.setCenter(place.geometry.location);
+            calcularDistanciaYPrecio(precioPorKm);
+        }
+    });
+
+    // Función para actualizar la dirección en el campo de texto
+    function updateAddressInput(autocomplete, inputElement, position) {
+        inputElement.value = '';
+        if (position) {
+            let geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: position }, function (results, status) {
+                if (status === 'OK' && results[0]) {
+                    inputElement.value = results[0].formatted_address;
+                }
+            });
+        }
+    }
+
+    // Calcular la distancia y el precio entre origen y destino
+    function calcularDistanciaYPrecio(precioPorKm) {
+        let origen = markerOrigen.getPosition();
+        let destino = markerDestino.getPosition();
+
+        if (origen && destino) {
+            let service = new google.maps.DistanceMatrixService();
+            service.getDistanceMatrix({
+                origins: [origen],
+                destinations: [destino],
+                travelMode: 'DRIVING'
+            }, function (response, status) {
+                if (status === 'OK') {
+                    let distanceText = response.rows[0].elements[0].distance.text;
+                    let distanceValue = response.rows[0].elements[0].distance.value / 1000; // en km
+                    let precio = Math.round(distanceValue * precioPorKm / 1000) * 1000;
+
+                    document.getElementById('distancia').value = distanceText;
+                    document.getElementById('precio').value = precio.toLocaleString('es-CR', {
+                        style: 'currency',
+                        currency: 'CRC',
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    });
+                }
+            });
+        }
+    }
+
+    // Función para guardar los datos del formulario
+    window.guardarDatos = function () {
+        let form = document.getElementById('shipmentForm');
+        if (form.checkValidity() === false) {
+            form.classList.add('was-validated');
             return;
         }
-        mapDestino.setCenter(place.geometry.location);
-        markerDestino.setPosition(place.geometry.location);
-        calcularDistanciaYPrecio(precioPorKm);
-    });
-});
 
-function guardarDatos() {
-    // Obtener los valores del formulario
-    let nombre = document.getElementById('nombre').value;
-    let telefono = document.getElementById('telefono').value;
-    let correo = document.getElementById('correo').value;
-    let origen = document.getElementById('origen').value;
-    let destino = document.getElementById('destino').value;
-    let detalle = document.getElementById('detalle').value;
-    let distancia = document.getElementById('distancia').value;
-    let precio = document.getElementById('precio').value;
-    let fechaEnvio = document.getElementById('fechaEnvio').value;
+        let nombre = document.getElementById('nombre').value;
+        let fechaEnvio = document.getElementById('fechaEnvio').value;
+        let telefono = document.getElementById('telefono').value;
+        let correo = document.getElementById('correo').value;
+        let origen = document.getElementById('origen').value;
+        let destino = document.getElementById('destino').value;
+        let detalle = document.getElementById('detalle').value;
+        let distancia = document.getElementById('distancia').value;
+        let precio = document.getElementById('precio').value;
 
-    // Validar el formulario
-    if (!nombre || !telefono.match(/^[0-9]{10}$/) || !correo.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) || !origen || !destino || !detalle || !fechaEnvio) {
-        document.getElementById('mensaje').innerHTML = '<div class="alert alert-danger" role="alert">Por favor complete todos los campos correctamente.</div>';
-        return;
-    }
-
-    // Crear objeto con los datos
-    let datos = {
-        nombre: nombre,
-        telefono: telefono,
-        correo: correo,
-        origen: origen,
-        destino: destino,
-        detalle: detalle,
-        distancia: distancia,
-        precio: precio,
-        fechaEnvio: fechaEnvio
-    };
-
-    // Convertir a JSON
-    let datosJSON = JSON.stringify(datos);
-
-    // Mostrar mensaje de éxito y limpiar formulario
-    document.getElementById('mensaje').innerHTML = '<div class="alert alert-success" role="alert">Datos guardados exitosamente.</div>';
-    console.log(datosJSON);
-
-    // Limpiar el formulario
-    document.getElementById('shipmentForm').reset();
-    document.getElementById('shipmentForm').classList.remove('was-validated');
-    document.getElementById('distancia').value = '';
-    document.getElementById('precio').value = '';
-}
-
-function calcularDistanciaYPrecio(precioPorKm) {
-    let origen = document.getElementById('origen').value;
-    let destino = document.getElementById('destino').value;
-
-    if (origen && destino) {
-        let directionsService = new google.maps.DirectionsService();
-        let directionsRequest = {
-            origin: origen,
-            destination: destino,
-            travelMode: google.maps.TravelMode.DRIVING
+        let datosEnvio = {
+            nombre,
+            fechaEnvio,
+            telefono,
+            correo,
+            origen,
+            destino,
+            detalle,
+            distancia,
+            precio
         };
 
-        directionsService.route(directionsRequest, function (response, status) {
-            if (status === google.maps.DirectionsStatus.OK) {
-                let ruta = response.routes[0].legs[0];
-                let distancia = ruta.distance.value / 1000; // Convertir de metros a kilómetros
-                let precio = distancia * precioPorKm;
+        emailjs.send('service_id', 'template_id', datosEnvio)
+            .then(function (response) {
+                Swal.fire('Envío Exitoso', 'Sus datos han sido enviados correctamente.', 'success');
+                form.reset();
+                form.classList.remove('was-validated');
+                document.getElementById('distancia').value = '';
+                document.getElementById('precio').value = '';
+            }, function (error) {
+                Swal.fire('Error', 'Hubo un problema al enviar sus datos. Por favor intente nuevamente.', 'error');
+            });
 
-                document.getElementById('distancia').value = distancia.toFixed(2) + ' km';
-                document.getElementById('precio').value = '₡' + precio.toFixed(2);
-            } else {
-                document.getElementById('distancia').value = 'No se pudo calcular la distancia';
-                document.getElementById('precio').value = 'N/A';
-            }
-        });
-    }
-}
-
-function updateAddressInput(autocomplete, input, latLng) {
-    let geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ location: latLng }, function (results, status) {
-        if (status === 'OK' && results[0]) {
-            input.value = results[0].formatted_address;
-            google.maps.event.trigger(input, 'focus', {});
-            google.maps.event.trigger(input, 'keydown', { keyCode: 13 });
-        }
-    });
-}
+        // Enviar mensaje por WhatsApp
+        let whatsappMessage = `Nombre: ${nombre}\nFecha de Envío: ${fechaEnvio}\nTeléfono: ${telefono}\nCorreo: ${correo}\nOrigen: ${origen}\nDestino: ${destino}\nDetalle: ${detalle}\nDistancia: ${distancia}\nPrecio: ${precio}`;
+        let whatsappURL = `https://api.whatsapp.com/send?phone=50670465000&text=${encodeURIComponent(whatsappMessage)}`;
+        window.open(whatsappURL, '_blank');
+    };
+});

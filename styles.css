@@ -1,24 +1,33 @@
+/* Estilos generales */
 .hero-banner {
-    background: url('path-to-hero-image.jpg') no-repeat center center;
-    background-size: cover;
-    height: 400px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background-color: #007bff;
     color: white;
     text-align: center;
+    padding: 100px 0;
 }
-.footer {
-    background-color: #343a40;
-    color: white;
-    padding: 1rem 0;
+
+.sobre-nosotros {
+    text-align: center;
 }
+
+/* Estilos para mapas */
 .map-container {
     height: 300px;
     margin-top: 10px;
 }
-.sobre-nosotros {
-    background-color: #f0f0f0;
-    padding: 20px;
-    margin-top: 20px;
+
+/* Estilos para formulario */
+#shipmentForm {
+    max-width: 700px;
+    margin: auto;
+}
+
+/* Estilos para footer */
+.footer {
+    bottom: 0;
+    width: 100%;
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
 }
