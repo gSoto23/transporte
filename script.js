@@ -1,5 +1,58 @@
 document.addEventListener('DOMContentLoaded', function () {
     let precioPorKm = 3000;
+    let montoMinimo = 15000;
+
+      // Cargar datos de provincias, cantones y distritos
+      fetch('/provincias-cantones-dsitritos.json')
+      .then(response => response.json())
+      .then(data => {
+          if (data && data.provincias) {
+              const provincias = Object.values(data.provincias);
+              const selectProvincia = document.getElementById('provincia');
+              const selectCanton = document.getElementById('canton');
+              const selectDistrito = document.getElementById('distrito');
+
+              provincias.forEach(provincia => {
+                  let option = document.createElement('option');
+                  option.value = provincia.nombre;
+                  option.text = provincia.nombre;
+                  selectProvincia.appendChild(option);
+              });
+
+              selectProvincia.addEventListener('change', function () {
+                  let provinciaSeleccionada = provincias.find(p => p.nombre === this.value);
+                  let cantones = Object.values(provinciaSeleccionada.cantones);
+                  selectCanton.innerHTML = '<option value="">Seleccione...</option>';
+                  selectDistrito.innerHTML = '<option value="">Seleccione...</option>';
+
+                  cantones.forEach(canton => {
+                      let option = document.createElement('option');
+                      option.value = canton.nombre;
+                      option.text = canton.nombre;
+                      selectCanton.appendChild(option);
+                  });
+              });
+
+              selectCanton.addEventListener('change', function () {
+                  let provinciaSeleccionada = provincias.find(p => p.nombre === selectProvincia.value);
+                  let cantonSeleccionado = Object.values(provinciaSeleccionada.cantones).find(c => c.nombre === this.value);
+                  let distritos = Object.values(cantonSeleccionado.distritos);
+                  selectDistrito.innerHTML = '<option value="">Seleccione...</option>';
+
+                  distritos.forEach(distrito => {
+                      let option = document.createElement('option');
+                      option.value = distrito;
+                      option.text = distrito;
+                      selectDistrito.appendChild(option);
+                  });
+              });
+          } else {
+              console.error('El formato del JSON no es válido o no contiene provincias.');
+          }
+      })
+      .catch(error => {
+          console.error('Error al cargar el JSON:', error);
+      });
 
     // Inicializar flatpickr para el campo de fecha
     flatpickr('#fechaEnvio', {
@@ -8,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
         minDate: 'today'
     });
 
-    // Bootstrap form validation
+ // Bootstrap form validation
     (function () {
         'use strict';
         window.addEventListener('load', function () {
@@ -112,6 +165,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     let distanceValue = response.rows[0].elements[0].distance.value / 1000; // en km
                     let precio = Math.round(distanceValue * precioPorKm / 1000) * 1000;
 
+                    //validacion de precio minimo
+                    precio = Math.max(precio, montoMinimo);
+
                     document.getElementById('distancia').value = distanceText;
                     document.getElementById('precio').value = precio.toLocaleString('es-CR', {
                         style: 'currency',
@@ -124,6 +180,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+
+
+    function enviarCorreo(formData) {
+        emailjs.init('YOUR_EMAILJS_USER_ID');
+        emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', formData)
+            .then(function(response) {
+                console.log('Correo enviado con éxito!', response.status, response.text);
+            }, function(error) {
+                console.log('Error al enviar el correo.', error);
+            });
+    }
+    
+    function enviarWhatsApp(formData) {
+        const mensaje = `Nombre: ${formData.nombre}\nTeléfono: ${formData.telefono}\nCorreo: ${formData.correo}\nFecha de Envío: ${formData.fechaEnvio}\nOrigen: ${formData.origen}\nDestino: ${formData.destino}\nTipo de Vehículo: ${formData.tipoVehiculo}\nDetalle: ${formData.detalle}\nProvincia: ${formData.provincia}\nCantón: ${formData.canton}\nDistrito: ${formData.distrito}\nDistancia: ${formData.distancia}\nPrecio: ${formData.precio}`;
+        const whatsappUrl = `https://api.whatsapp.com/send?phone=50670465000&text=${encodeURIComponent(mensaje)}`;
+        window.open(whatsappUrl, '_blank');
+        console.log(whatsappUrl);
+    }
+
+
+
     // Función para guardar los datos del formulario
     window.guardarDatos = function () {
         let form = document.getElementById('shipmentForm');
@@ -132,42 +209,34 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        let nombre = document.getElementById('nombre').value;
-        let fechaEnvio = document.getElementById('fechaEnvio').value;
-        let telefono = document.getElementById('telefono').value;
-        let correo = document.getElementById('correo').value;
-        let origen = document.getElementById('origen').value;
-        let destino = document.getElementById('destino').value;
-        let detalle = document.getElementById('detalle').value;
-        let distancia = document.getElementById('distancia').value;
-        let precio = document.getElementById('precio').value;
 
-        let datosEnvio = {
-            nombre,
-            fechaEnvio,
-            telefono,
-            correo,
-            origen,
-            destino,
-            detalle,
-            distancia,
-            precio
+        const formData = {
+            nombre: document.getElementById('nombre').value,
+            fechaEnvio: document.getElementById('fechaEnvio').value,
+            telefono: document.getElementById('telefono').value,
+            correo: document.getElementById('correo').value,
+            origen: document.getElementById('origen').value,
+            destino: document.getElementById('destino').value,
+            tipoVehiculo: document.getElementById('tipoVehiculo').value,
+            detalle: document.getElementById('detalle').value,
+            provincia: document.getElementById('provincia').value,
+            canton: document.getElementById('canton').value,
+            distrito: document.getElementById('distrito').value,
+            distancia: document.getElementById('distancia').value,
+            precio: document.getElementById('precio').value,
         };
 
-        emailjs.send('service_id', 'template_id', datosEnvio)
-            .then(function (response) {
-                Swal.fire('Envío Exitoso', 'Sus datos han sido enviados correctamente.', 'success');
-                form.reset();
-                form.classList.remove('was-validated');
-                document.getElementById('distancia').value = '';
-                document.getElementById('precio').value = '';
-            }, function (error) {
-                Swal.fire('Error', 'Hubo un problema al enviar sus datos. Por favor intente nuevamente.', 'error');
-            });
+        enviarCorreo(formData);
+        enviarWhatsApp(formData);
 
-        // Enviar mensaje por WhatsApp
-        let whatsappMessage = `Nombre: ${nombre}\nFecha de Envío: ${fechaEnvio}\nTeléfono: ${telefono}\nCorreo: ${correo}\nOrigen: ${origen}\nDestino: ${destino}\nDetalle: ${detalle}\nDistancia: ${distancia}\nPrecio: ${precio}`;
-        let whatsappURL = `https://api.whatsapp.com/send?phone=50670465000&text=${encodeURIComponent(whatsappMessage)}`;
-        window.open(whatsappURL, '_blank');
+        Swal.fire({
+            icon: 'success',
+            title: '¡Datos guardados!',
+            text: 'La información ha sido enviada y guardada exitosamente.'
+        });
+    
+        form.reset();
+        form.classList.remove('was-validated');
     };
+    
 });
