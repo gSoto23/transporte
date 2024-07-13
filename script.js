@@ -180,8 +180,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
-
     function enviarCorreo(formData) {
         emailjs.init('YOUR_EMAILJS_USER_ID');
         emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', formData)
@@ -196,10 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const mensaje = `Nombre: ${formData.nombre}\nTeléfono: ${formData.telefono}\nCorreo: ${formData.correo}\nFecha de Envío: ${formData.fechaEnvio}\nOrigen: ${formData.origen}\nDestino: ${formData.destino}\nTipo de Vehículo: ${formData.tipoVehiculo}\nDetalle: ${formData.detalle}\nProvincia: ${formData.provincia}\nCantón: ${formData.canton}\nDistrito: ${formData.distrito}\nDistancia: ${formData.distancia}\nPrecio: ${formData.precio}`;
         const whatsappUrl = `https://api.whatsapp.com/send?phone=50670465000&text=${encodeURIComponent(mensaje)}`;
         window.open(whatsappUrl, '_blank');
-        console.log(whatsappUrl);
     }
-
-
 
     // Función para guardar los datos del formulario
     window.guardarDatos = function () {
@@ -208,7 +203,6 @@ document.addEventListener('DOMContentLoaded', function () {
             form.classList.add('was-validated');
             return;
         }
-
 
         const formData = {
             nombre: document.getElementById('nombre').value,
