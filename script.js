@@ -1,58 +1,84 @@
 document.addEventListener('DOMContentLoaded', function () {
-    let precioPorKm = 3000;
-    let montoMinimo = 15000;
+    let precioPorKm;
+    let montoMinimo;
 
-      // Cargar datos de provincias, cantones y distritos
-      fetch('/provincias-cantones-dsitritos.json')
-      .then(response => response.json())
-      .then(data => {
-          if (data && data.provincias) {
-              const provincias = Object.values(data.provincias);
-              const selectProvincia = document.getElementById('provincia');
-              const selectCanton = document.getElementById('canton');
-              const selectDistrito = document.getElementById('distrito');
+    function actualizarPreciosPorVehiculo() {
+        const tipoVehiculo = document.getElementById('tipoVehiculo').value;
+        switch (tipoVehiculo) {
+            case 'Moto':
+                precioPorKm = 2000;
+                montoMinimo = 5000;
+                break;
+            case 'Camion':
+                precioPorKm = 3000;
+                montoMinimo = 15000;
+                break;
+            case 'Vagoneta':
+                precioPorKm = 4000;
+                montoMinimo = 20000;
+                break;
+            default:
+                precioPorKm = 3000;
+                montoMinimo = 15000;
+        }
+    }
 
-              provincias.forEach(provincia => {
-                  let option = document.createElement('option');
-                  option.value = provincia.nombre;
-                  option.text = provincia.nombre;
-                  selectProvincia.appendChild(option);
-              });
+    document.getElementById('tipoVehiculo').addEventListener('change', function() {
+        actualizarPreciosPorVehiculo();
+        calcularDistanciaYPrecio();
+    });
 
-              selectProvincia.addEventListener('change', function () {
-                  let provinciaSeleccionada = provincias.find(p => p.nombre === this.value);
-                  let cantones = Object.values(provinciaSeleccionada.cantones);
-                  selectCanton.innerHTML = '<option value="">Seleccione...</option>';
-                  selectDistrito.innerHTML = '<option value="">Seleccione...</option>';
+    // Cargar datos de provincias, cantones y distritos
+    fetch('/provincias-cantones-dsitritos.json')
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.provincias) {
+                const provincias = Object.values(data.provincias);
+                const selectProvincia = document.getElementById('provincia');
+                const selectCanton = document.getElementById('canton');
+                const selectDistrito = document.getElementById('distrito');
 
-                  cantones.forEach(canton => {
-                      let option = document.createElement('option');
-                      option.value = canton.nombre;
-                      option.text = canton.nombre;
-                      selectCanton.appendChild(option);
-                  });
-              });
+                provincias.forEach(provincia => {
+                    let option = document.createElement('option');
+                    option.value = provincia.nombre;
+                    option.text = provincia.nombre;
+                    selectProvincia.appendChild(option);
+                });
 
-              selectCanton.addEventListener('change', function () {
-                  let provinciaSeleccionada = provincias.find(p => p.nombre === selectProvincia.value);
-                  let cantonSeleccionado = Object.values(provinciaSeleccionada.cantones).find(c => c.nombre === this.value);
-                  let distritos = Object.values(cantonSeleccionado.distritos);
-                  selectDistrito.innerHTML = '<option value="">Seleccione...</option>';
+                selectProvincia.addEventListener('change', function () {
+                    let provinciaSeleccionada = provincias.find(p => p.nombre === this.value);
+                    let cantones = Object.values(provinciaSeleccionada.cantones);
+                    selectCanton.innerHTML = '<option value="">Seleccione...</option>';
+                    selectDistrito.innerHTML = '<option value="">Seleccione...</option>';
 
-                  distritos.forEach(distrito => {
-                      let option = document.createElement('option');
-                      option.value = distrito;
-                      option.text = distrito;
-                      selectDistrito.appendChild(option);
-                  });
-              });
-          } else {
-              console.error('El formato del JSON no es válido o no contiene provincias.');
-          }
-      })
-      .catch(error => {
-          console.error('Error al cargar el JSON:', error);
-      });
+                    cantones.forEach(canton => {
+                        let option = document.createElement('option');
+                        option.value = canton.nombre;
+                        option.text = canton.nombre;
+                        selectCanton.appendChild(option);
+                    });
+                });
+
+                selectCanton.addEventListener('change', function () {
+                    let provinciaSeleccionada = provincias.find(p => p.nombre === selectProvincia.value);
+                    let cantonSeleccionado = Object.values(provinciaSeleccionada.cantones).find(c => c.nombre === this.value);
+                    let distritos = Object.values(cantonSeleccionado.distritos);
+                    selectDistrito.innerHTML = '<option value="">Seleccione...</option>';
+
+                    distritos.forEach(distrito => {
+                        let option = document.createElement('option');
+                        option.value = distrito;
+                        option.text = distrito;
+                        selectDistrito.appendChild(option);
+                    });
+                });
+            } else {
+                console.error('El formato del JSON no es válido o no contiene provincias.');
+            }
+        })
+        .catch(error => {
+            console.error('Error al cargar el JSON:', error);
+        });
 
     // Inicializar flatpickr para el campo de fecha
     flatpickr('#fechaEnvio', {
@@ -61,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
         minDate: 'today'
     });
 
- // Bootstrap form validation
+    // Bootstrap form validation
     (function () {
         'use strict';
         window.addEventListener('load', function () {
@@ -90,13 +116,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let markerOrigen = new google.maps.Marker({
         map: mapOrigen,
+        position: mapOrigen.getCenter(),
         draggable: true
     });
 
     // Eventos para actualizar al mover el marcador de origen
     google.maps.event.addListener(markerOrigen, 'dragend', function () {
         updateAddressInput(autocompleteOrigen, document.getElementById('origen'), markerOrigen.getPosition());
-        calcularDistanciaYPrecio(precioPorKm);
+        calcularDistanciaYPrecio();
     });
 
     // Mapa y marcadores para destino
@@ -107,13 +134,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let markerDestino = new google.maps.Marker({
         map: mapDestino,
+        position: mapDestino.getCenter(),
         draggable: true
     });
 
     // Eventos para actualizar al mover el marcador de destino
     google.maps.event.addListener(markerDestino, 'dragend', function () {
         updateAddressInput(autocompleteDestino, document.getElementById('destino'), markerDestino.getPosition());
-        calcularDistanciaYPrecio(precioPorKm);
+        calcularDistanciaYPrecio();
     });
 
     // Actualizar campos al seleccionar una dirección del autocompletar
@@ -122,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (place.geometry) {
             markerOrigen.setPosition(place.geometry.location);
             mapOrigen.setCenter(place.geometry.location);
-            calcularDistanciaYPrecio(precioPorKm);
+            calcularDistanciaYPrecio();
         }
     });
 
@@ -131,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (place.geometry) {
             markerDestino.setPosition(place.geometry.location);
             mapDestino.setCenter(place.geometry.location);
-            calcularDistanciaYPrecio(precioPorKm);
+            calcularDistanciaYPrecio();
         }
     });
 
@@ -149,7 +177,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Calcular la distancia y el precio entre origen y destino
-    function calcularDistanciaYPrecio(precioPorKm) {
+    function calcularDistanciaYPrecio() {
+        actualizarPreciosPorVehiculo();
         let origen = markerOrigen.getPosition();
         let destino = markerDestino.getPosition();
 
@@ -220,8 +249,8 @@ document.addEventListener('DOMContentLoaded', function () {
             precio: document.getElementById('precio').value,
         };
 
-        enviarCorreo(formData);
         enviarWhatsApp(formData);
+        enviarCorreo(formData);
 
         Swal.fire({
             icon: 'success',
@@ -232,5 +261,7 @@ document.addEventListener('DOMContentLoaded', function () {
         form.reset();
         form.classList.remove('was-validated');
     };
-    
+
+    // Inicializar los precios por defecto
+    actualizarPreciosPorVehiculo();
 });
