@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     function enviarWhatsApp(formData) {
-        const mensaje = `Nombre: ${formData.nombre}\nTeléfono: ${formData.telefono}\nCorreo: ${formData.correo}\nFecha de Envío: ${formData.fechaEnvio}\nOrigen: ${formData.origen}\nDestino: ${formData.destino}\nTipo de Vehículo: ${formData.tipoVehiculo}\nDetalle: ${formData.detalle}\nProvincia: ${formData.provincia}\nCantón: ${formData.canton}\nDistrito: ${formData.distrito}\nDistancia: ${formData.distancia}\nPrecio: ${formData.precio}`;
+        const mensaje = `Tipo de Vehículo: ${formData.tipoVehiculo}\nFecha de Envío: ${formData.fechaEnvio}\nProvincia: ${formData.provincia}\nCantón: ${formData.canton}\nDistrito: ${formData.distrito}\nOrigen: ${formData.origen}\nDestino: ${formData.destino}\nDetalle: ${formData.detalle}\nNombre: ${formData.nombre}\nTeléfono: ${formData.telefono}\nCorreo: ${formData.correo}\nDistancia: ${formData.distancia}\nPrecio: ${formData.precio}`;
         const whatsappUrl = `https://api.whatsapp.com/send?phone=50670465000&text=${encodeURIComponent(mensaje)}`;
         window.open(whatsappUrl, '_blank');
     }
@@ -238,8 +238,8 @@ document.addEventListener('DOMContentLoaded', function () {
             fechaEnvio: document.getElementById('fechaEnvio').value,
             telefono: document.getElementById('telefono').value,
             correo: document.getElementById('correo').value,
-            origen: document.getElementById('origen').value,
-            destino: document.getElementById('destino').value,
+            origen: `https://www.waze.com/ul?ll=${markerOrigen.getPosition().lat()},${markerOrigen.getPosition().lng()}&navigate=yes`,
+            destino: `https://www.waze.com/ul?ll=${markerDestino.getPosition().lat()},${markerDestino.getPosition().lng()}&navigate=yes`,
             tipoVehiculo: document.getElementById('tipoVehiculo').value,
             detalle: document.getElementById('detalle').value,
             provincia: document.getElementById('provincia').value,

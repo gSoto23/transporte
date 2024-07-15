@@ -1,6 +1,6 @@
 /* Estilos generales */
 .hero-banner {
-    background-color: #007bff;
+    /* background-color: #343a40; */
     color: white;
     text-align: center;
     padding: 100px 0;
@@ -8,6 +8,29 @@
 
 .sobre-nosotros {
     text-align: center;
+    background-color: #004085;
+    color: white;
+    margin-top: 0px !important;
+    padding: 20px;
+}
+
+.tc {
+    margin-top: 0px !important;
+    padding: 20px;
+}
+
+.btn-send {
+    background-color: #004085;
+    border: 1px;
+}
+
+.red-hover:hover {
+    background-color: rgb(255, 0, 0) !important;
+    border: 1px red;
+}
+
+.color-site {
+    color: #004085;
 }
 
 /* Estilos para mapas */
@@ -30,4 +53,21 @@
     color: white;
     text-align: center;
     padding: 10px 0;
+}
+
+/* Estilos iconos */
+.vehicle-images {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.vehicle-image img {
+    max-width: 100px;
+    /* Ajusta el tamaño según sea necesario */
+    width: 70%;
+    height: auto;
+    display: block;
+    /* Asegura que las imágenes sean visibles */
 }

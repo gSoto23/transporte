@@ -13,11 +13,11 @@
 <body>
     <!-- Home page hero banner -->
     <div class="hero-banner">
-        <h1>Bienvenido a Nuestro Servicio de Transporte</h1>
+        <div><img src="/img/logoBanner.png" alt=""></div>
     </div>
 
     <!-- Descripción del servicio -->
-    <div class="container mt-5 sobre-nosotros">
+    <div class="container-fluid mt-5 sobre-nosotros">
         <h2>Sobre Nosotros</h2>
         <p>Ofrecemos servicios de transporte de mercadería confiables y seguros. Nos especializamos en el manejo
             eficiente y puntual de sus envíos, asegurando que su mercadería llegue a su destino en perfectas condiciones
@@ -26,12 +26,16 @@
 
     <!-- Formulario de envío -->
     <div class="container mt-5">
-        <h2>Solicita un Envío</h2>
+        <h2 class="color-site ">Solicita un Servicio</h2>
         <form id="shipmentForm" class="needs-validation" novalidate>
             <div class="form-group">
                 <div class="form-row">
                     <div class="form-group col-md-6">
-
+                        <div class="vehicle-images d-flex justify-content-between">
+                            <div class="vehicle-image"><img src="img/moto.png" alt="moto"></div>
+                            <div class="vehicle-image"><img src="img/camion.png" alt="camion"></div>
+                            <div class="vehicle-image"><img src="img/vagoneta.png" alt="vagoneta"></div>
+                        </div>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="tipoVehiculo">Tipo de Vehículo:</label>
@@ -56,7 +60,7 @@
                         <div class="invalid-feedback">Por favor seleccione la fecha de envío.</div>
                     </div>
                 </div>
-            </div>
+            </div>            
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="telefono">Teléfono:</label>
@@ -123,7 +127,7 @@
             </div>
             <div class="form-row">
                 <div class="form-group col-md-12">
-                    <button type="button" class="btn btn-primary" onclick="guardarDatos()">Solicitar Envío</button>
+                    <button type="button" class="btn btn-primary btn-send red-hover" onclick="guardarDatos()">Solicitar Envío</button>
                 </div>
             </div>
         </form>
@@ -131,15 +135,15 @@
     </div>
 
     <!-- Términos y condiciones -->
-    <div class="container mt-5">
-        <h2>Términos y Condiciones</h2>
+    <div class="container-fluid mt-5">
+        <h2 class="color-site tc">Términos y Condiciones</h2>
         <div id="accordion">
             <div class="card">
                 <div class="card-header" id="headingOne">
                     <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
+                        <button class="btn btn-link color-site" data-toggle="collapse" data-target="#collapseOne"
                             aria-expanded="true" aria-controls="collapseOne">
-                            Términos de Servicio
+                            Mensajería - Moto
                         </button>
                     </h5>
                 </div>
@@ -153,9 +157,9 @@
             <div class="card">
                 <div class="card-header" id="headingTwo">
                     <h5 class="mb-0">
-                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo"
+                        <button class="btn btn-link collapsed color-site" data-toggle="collapse" data-target="#collapseTwo"
                             aria-expanded="false" aria-controls="collapseTwo">
-                            Política de Privacidad
+                            Transporte - Camiones
                         </button>
                     </h5>
                 </div>
@@ -168,9 +172,9 @@
             <div class="card">
                 <div class="card-header" id="headingThree">
                     <h5 class="mb-0">
-                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree"
+                        <button class="btn btn-link collapsed color-site" data-toggle="collapse" data-target="#collapseThree"
                             aria-expanded="false" aria-controls="collapseThree">
-                            Condiciones de Uso
+                            Transporte - Vagonetas
                         </button>
                     </h5>
                 </div>
