@@ -3,25 +3,38 @@ document.addEventListener('DOMContentLoaded', function () {
     let montoMinimo;
 
     function actualizarPreciosPorVehiculo() {
+
+        var fechaHoy = new Date().toISOString().substring(0, 10);
+        document.getElementById('fechaEnvio').value = fechaHoy;
+
         const tipoVehiculo = document.getElementById('tipoVehiculo').value;
         switch (tipoVehiculo) {
-            case 'Moto':
-                precioPorKm = 2000;
-                montoMinimo = 5000;
+            case 'Camión 3 Ton':
+                precioPorKm = 1500;
+                montoMinimo = 25000;
                 break;
-            case 'Camion':
+            case 'Camión 5 Ton +':
                 precioPorKm = 3000;
-                montoMinimo = 15000;
+                montoMinimo = 50000;
+                break;
+            case 'Plataforma 3 Ton':
+                precioPorKm = 2000;
+                montoMinimo = 30000;
+                break;    
+            case 'Plataforma 5 Ton +':
+                precioPorKm = 3000;
+                montoMinimo = 50000;
                 break;
             case 'Vagoneta':
-                precioPorKm = 4000;
-                montoMinimo = 20000;
+                precioPorKm = 3000;
+                montoMinimo = 50000;
                 break;
             default:
-                precioPorKm = 3000;
+                precioPorKm = 3000;  // Precio por defecto para cualquier tipo no especificado
                 montoMinimo = 15000;
         }
     }
+    
 
     document.getElementById('tipoVehiculo').addEventListener('change', function() {
         actualizarPreciosPorVehiculo();
@@ -110,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Mapa y marcadores para origen
     let mapOrigen = new google.maps.Map(document.getElementById('mapOrigen'), {
-        zoom: 15,
+        zoom: 8,
         center: { lat: 9.748917, lng: -83.753428 } // Coordenadas de Costa Rica
     });
 
@@ -128,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Mapa y marcadores para destino
     let mapDestino = new google.maps.Map(document.getElementById('mapDestino'), {
-        zoom: 15,
+        zoom: 8,
         center: { lat: 9.748917, lng: -83.753428 } // Coordenadas de Costa Rica
     });
 
@@ -220,10 +233,28 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     function enviarWhatsApp(formData) {
-        const mensaje = `Tipo de Vehículo: ${formData.tipoVehiculo}\nFecha de Envío: ${formData.fechaEnvio}\nProvincia: ${formData.provincia}\nCantón: ${formData.canton}\nDistrito: ${formData.distrito}\nOrigen: ${formData.origen}\nDestino: ${formData.destino}\nDetalle: ${formData.detalle}\nNombre: ${formData.nombre}\nTeléfono: ${formData.telefono}\nCorreo: ${formData.correo}\nDistancia: ${formData.distancia}\nPrecio: ${formData.precio}`;
+        const mensaje = `Tipo de Vehículo: ${formData.tipoVehiculo}\nFecha de Envío: ${formData.fechaEnvio}\nProvincia: ${formData.provincia}\nCantón: ${formData.canton}\nDistrito: ${formData.distrito}\nOrigen: ${formData.origen}\nDestino: ${formData.destino}\nDetalle: ${formData.detalle}\nNombre: ${formData.nombre}\nTeléfono: +506${formData.telefono}\nCorreo: ${formData.correo}\nDistancia: ${formData.distancia}\nPrecio: ${formData.precio}`;
         const whatsappUrl = `https://api.whatsapp.com/send?phone=50670465000&text=${encodeURIComponent(mensaje)}`;
         window.open(whatsappUrl, '_blank');
     }
+
+    // function enviarWhatsApp(formData) {
+    //     fetch('http://localhost:3000/send-message', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({
+    //             message: `Tipo de Vehículo: ${formData.tipoVehiculo}\nFecha de Envío: ${formData.fechaEnvio}\nProvincia: ${formData.provincia}\nCantón: ${formData.canton}\nDistrito: ${formData.distrito}\nOrigen: ${formData.origen}\nDestino: ${formData.destino}\nDetalle: ${formData.detalle}\nNombre: ${formData.nombre}\nTeléfono: +506${formData.telefono}\nCorreo: ${formData.correo}\nDistancia: ${formData.distancia}\nPrecio: ${formData.precio}`,
+    //             // to: 'whatsapp-group-id',
+    //             to: `whatsapp:+50670465000`
+    //         })
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => console.log('Respuesta del servidor:', data))
+    //     .catch(error => console.error('Error enviando mensaje:', error));
+    // }
+    
 
     // Función para guardar los datos del formulario
     window.guardarDatos = function () {

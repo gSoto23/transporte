@@ -8,6 +8,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
@@ -18,7 +19,7 @@
 
     <!-- Descripción del servicio -->
     <div class="container-fluid mt-5 sobre-nosotros">
-        <h2>Sobre Nosotros</h2>
+        <h2>Como funciona?</h2>
         <p>Ofrecemos servicios de transporte de mercadería confiables y seguros. Nos especializamos en el manejo
             eficiente y puntual de sus envíos, asegurando que su mercadería llegue a su destino en perfectas condiciones
             y a tiempo.</p>
@@ -26,7 +27,7 @@
 
     <!-- Formulario de envío -->
     <div class="container mt-5">
-        <h2 class="color-site ">Solicita un Servicio</h2>
+        <h2 class="color-site ">Solicite un transporte</h2>
         <form id="shipmentForm" class="needs-validation" novalidate>
             <div class="form-group">
                 <div class="form-row">
@@ -41,35 +42,38 @@
                         <label for="tipoVehiculo">Tipo de Vehículo:</label>
                         <select class="form-control" id="tipoVehiculo" required>
                             <option value="">Seleccione...</option>
-                            <option value="Moto">Moto</option>
-                            <option value="Camion">Camión</option>
+                            <option value="Camión 3 Ton">Camión 3 Ton</option>
+                            <option value="Camión 5 Ton +">Camión 5 Ton +</option>
+                            <option value="Plataforma 3 Ton">Plataforma 3 Ton</option>
+                            <option value="Plataforma 5 Ton +">Plataforma 5 Ton +</option>
                             <option value="Vagoneta">Vagoneta</option>
-                        </select>
+                        </select>                        
                         <div class="invalid-feedback">Por favor seleccione un tipo de vehículo.</div>
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-9">
                         <label for="nombre">Nombre:</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" required>
                         <div class="invalid-feedback">Por favor ingrese su nombre.</div>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-3 position-relative">
                         <label for="fechaEnvio" class="mr-2">Fecha de Envío:</label>
-                        <input type="text" class="form-control" id="fechaEnvio" name="fechaEnvio" required>
+                        <input type="date" class="form-control" id="fechaEnvio" name="fechaEnvio" required>
+                        <i class="fas fa-calendar-alt position-absolute" style="right: 15px; top: 42px; pointer-events: none;"></i>
                         <div class="invalid-feedback">Por favor seleccione la fecha de envío.</div>
-                    </div>
+                    </div>                    
                 </div>
             </div>            
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="telefono">Teléfono:</label>
-                    <input type="tel" class="form-control" id="telefono" name="telefono" pattern="[0-9]{8}" required>
+                    <input type="tel" class="form-control" id="telefono" name="telefono" pattern="[0-9]{8}" placeholder="+506" required>
                     <div class="invalid-feedback">Por favor ingrese un número de teléfono válido (8 dígitos).</div>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="correo">Correo:</label>
-                    <input type="email" class="form-control" id="correo" name="correo" required>
+                    <input type="email" class="form-control" id="correo" name="correo" placeholder="@" required>
                     <div class="invalid-feedback">Por favor ingrese un correo electrónico válido.</div>
                 </div>
             </div>
@@ -198,9 +202,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOlzNqAOokDabDlbFVuozKQuOGc1TAr_k&libraries=places"></script>
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGzsXAPAdal_LbcR_cHonbgZYO5VDPf6E&libraries=places"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="script.js"></script>
 </body>
-
 </html>
