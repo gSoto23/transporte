@@ -77,3 +77,13 @@
     display: block;
     /* Asegura que las imágenes sean visibles */
 }
+
+@media (max-width: 600px) {
+    img {
+        /* Example additional styles for mobile devices, you can customize these as needed */
+        max-width: 100%;
+        height: auto; /* Maintain aspect ratio */
+        display: block; /* Makes the image a block element to take up the full line */
+        margin: 0 auto; /* Optionally center the image horizontally if needed */
+    }
+}
