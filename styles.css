@@ -10,18 +10,18 @@
     text-align: center;
     background-color: #004085;
     color: white;
-    margin-top: 0px !important;
+    margin-top: 0 !important;
     padding: 20px;
 }
 
 .iconcal {
-    right: 10px; 
-    top: 35px; 
+    right: 10px;
+    top: 35px;
     pointer-events: none;
 }
 
 .tc {
-    margin-top: 0px !important;
+    margin-top: 0 !important;
     padding: 20px;
 }
 
@@ -78,6 +78,86 @@
     /* Asegura que las imágenes sean visibles */
 }
 
+.vehicle-image {
+    cursor: pointer;
+    padding: 10px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.vehicle-image:hover {
+    transform: scale(1.05);
+}
+
+.vehicle-image.selected {
+    border-color: #007bff;
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+.vehicle-image img {
+    max-width: 120px;
+    height: auto;
+    margin: 0 auto;
+}
+
+.img-tag {
+    text-align: center;
+}
+
+.form-fields-container {
+    opacity: 0.5;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.form-fields-container.enabled {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.title-description {
+    margin: 0 0 20px 0;
+}
+
+.icon-help {
+    max-width: 40px;
+    height: auto;
+}
+
+.item-help {
+    padding-left: 30px;
+}
+
+.m-ayudante {
+    padding-top: 10px;
+}
+
+.text-ayudante {
+    margin: 0 0 0 19px;
+}
+
+.imagen-ayudante {
+    padding-left: 40px;
+}
+
+.disclaimer {
+    color: #ed3434;
+    font-size: 10px;
+    text-align: center;
+    position: absolute;
+    margin-left: 90px;
+    margin-top: -20px;
+}
+
+.separdor {
+    margin: 30px 0;
+}
+
+.btn-transporte {
+    width: 100%;
+}
+
 @media (max-width: 600px) {
     img {
         /* Example additional styles for mobile devices, you can customize these as needed */
@@ -85,5 +165,21 @@
         height: auto; /* Maintain aspect ratio */
         display: block; /* Makes the image a block element to take up the full line */
         margin: 0 auto; /* Optionally center the image horizontally if needed */
+    }
+
+    .m-ayudante {
+        text-align: center;
+    }
+
+    .item-help {
+        padding-left: 0;
+    }
+
+    .imagen-ayudante {
+        padding-left: 25%;
+    }
+
+    .disclaimer {
+        margin-left: 165px;
     }
 }
