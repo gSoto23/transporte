@@ -16,11 +16,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const tipoVehiculo = document.getElementById('tipoVehiculo').value;
         switch (tipoVehiculo) {
             case 'Camión 3 Ton':
-                precioPorKm = 1500;
+                precioPorKm = 2500;
                 montoMinimo = 25000;
                 break;
             case 'Moto':
-                precioPorKm = 3000;
+                precioPorKm = 5000;
                 montoMinimo = 15000;
                 break;
             case 'Mudanza':
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 break;
             default:
                 precioPorKm = 3000;
-                montoMinimo = 15000;
+                montoMinimo = 20000;
         }
     }
 
@@ -63,8 +63,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Mapa y marcadores para origen
     let mapOrigen = new google.maps.Map(document.getElementById('mapOrigen'), {
-        zoom: 12,
-        center: { lat: 9.748917, lng: -83.753428 }
+        zoom: 15,
+        center: { lat: 10.0163, lng: -84.2116}
     });
 
     let markerOrigen = new google.maps.Marker({
@@ -81,8 +81,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Mapa y marcadores para destino
     let mapDestino = new google.maps.Map(document.getElementById('mapDestino'), {
-        zoom: 12,
-        center: { lat: 9.748917, lng: -83.753428 }
+        zoom: 15,
+        center: { lat: 10.0163, lng: -84.2116}
     });
 
     let markerDestino = new google.maps.Marker({
